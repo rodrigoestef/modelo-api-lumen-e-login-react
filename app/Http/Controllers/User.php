@@ -10,6 +10,21 @@ use App\pessoal\mail;
 class User extends Controller
 {
 
+    function newUserActivate($token){
+        
+        $result = DB::table('first_access')->where(['token'=>$token])->first();
+
+        if (isset($result->user_id)) {
+            $user_id = $result->user_id;
+            DB::table('user_authorization')->insert(['user_id'=>$user_id,'authorization_id'=>1]);   
+            DB::table('first_access')->where(['token'=>$token])->delete();
+            return "<script>
+                alert('usuario ativado');
+                document.location='".getenv('APP_URL_DASHBOARD')."';
+            </script>";
+        }
+    }
+
     function newUser(Request $request){
         $this->validate($request,['email'=> 'required', 'password'=>'required','name'=>'required']);
         $email = $request->input('email');
@@ -26,7 +41,7 @@ class User extends Controller
         $token = mail::createHash();
         DB::table('first_access')->insert(['user_id'=>$user_id,'token'=>$token]);
 
-        mail::send($email,'falta pouco',"cadastro quase finalizado. Para confirmar seu email clique <a href=".getenv('APP_URL')."/newuser/$token>aqui</a>");
+        mail::send($email,'falta pouco',"cadastro quase finalizado. Para confirmar seu email clique <a href=".getenv('APP_URL')."/user/newuser/$token>aqui</a>");
         return json_encode(['sucess'=>"um email foi enviado para $email. verifique seu email para ativar conta"]);
     }
 
