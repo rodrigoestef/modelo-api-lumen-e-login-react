@@ -14,6 +14,7 @@ class users extends Seeder
     public function run()
     {
         DB::table('users')->truncate();
+        DB::table('first_access')->truncate();
         DB::table('users')->insert([
             'name' => 'dev',
             'email' => 'dev@dev.com',

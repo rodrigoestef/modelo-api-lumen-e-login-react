@@ -19,5 +19,6 @@ $router->group(['prefix'=> 'user'],function() use ($router){
     $router->get('/',function(){ return 'teste';});
 
     $router->post('/login','User@login');
+    $router->post('/newuser','User@newUser');
     $router->get('/',['middleware'=>'auth','uses'=>'User@check']);
 });

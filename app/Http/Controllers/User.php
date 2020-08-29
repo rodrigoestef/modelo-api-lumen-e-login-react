@@ -6,9 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
-
+use App\pessoal\mail;
 class User extends Controller
 {
+
+    function newUser(Request $request){
+        $this->validate($request,['email'=> 'required', 'password'=>'required','name'=>'required']);
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $name = $request->input('name');
+
+        $result = DB::select('select * from users where email=?',[$email]);
+        if ($result) {
+            return json_encode(['falied'=> 'email ja cadastrado']);
+        }
+
+        $user_id = DB::table('users')->insertGetId(['name'=>$name,'email'=>$email,'password'=>Hash::make($password)]);
+
+        $token = mail::createHash();
+        DB::table('first_access')->insert(['user_id'=>$user_id,'token'=>$token]);
+
+        mail::send($email,'falta pouco',"cadastro quase finalizado. Para confirmar seu email clique <a href=".getenv('APP_URL')."/newuser/$token>aqui</a>");
+        return json_encode(['sucess'=>"um email foi enviado para $email. verifique seu email para ativar conta"]);
+    }
 
     function check(Request $request){
         $user = $request->user();
