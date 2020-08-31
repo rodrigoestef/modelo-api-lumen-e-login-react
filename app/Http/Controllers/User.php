@@ -16,7 +16,7 @@ class User extends Controller
         $result = DB::select("SELECT a.id from users as a inner join user_authorization as b on a.id=b.user_id where b.authorization_id = 1 and a.email=?",[$email]);
         if ($result) {
             $user_id = $result[0]->id;
-            
+
             do {
                 $token = mail::createHash();
                 $check = DB::table('newpass')->where(['token'=>$token])->first();
@@ -57,8 +57,10 @@ class User extends Controller
         }
 
         $user_id = DB::table('users')->insertGetId(['name'=>$name,'email'=>$email,'password'=>Hash::make($password)]);
-
-        $token = mail::createHash();
+        do {
+            $token = mail::createHash();
+            $check = DB::table('first_access')->where(['token'=>$token])->first();
+        } while ($check);
         DB::table('first_access')->insert(['user_id'=>$user_id,'token'=>$token]);
 
         mail::send($email,'falta pouco',"cadastro quase finalizado. Para confirmar seu email clique <a href=".getenv('APP_URL')."/user/newuser/$token>aqui</a>");
