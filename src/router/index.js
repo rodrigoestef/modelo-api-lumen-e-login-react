@@ -1,19 +1,34 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Unauth from './unauthorizated'
+import Auth from './authorizated'
+import {useUser} from '../context/userContext';
 import Style from '../globalStyle';
-import con from '../conexao'
+import conexao from '../conexao'
 
 export default ()=>{
-    // useEffect(()=>{const isAuth = async()=>{
-    //     const teste = await con.get('/user')
-    //     console.log(teste)
-    // }
-    // isAuth()
-    // },[]);
+    const {isAuth,setAuth} = useUser()
+    const {checked,setChecked} = useUser()
+    
+
+    useEffect(()=>{const isAuth = async()=>{
+        try {
+            const con = conexao()
+            const {data} = await con.get('/user')
+            console.log(data)
+            
+        } catch (error) {
+            
+        
+        }
+        setChecked(1)
+    }
+    isAuth()
+    },[]);
     return(
         <>
             <Style/>
-            <Unauth/>
+            {isAuth == 0 && checked == 1 ? <Unauth/>:<div/>}
+            {isAuth == 1 && checked == 1 ? <Auth/>:<div/>}
         </>
     )
 }
