@@ -10,6 +10,26 @@ use App\pessoal\mail;
 class User extends Controller
 {
 
+    function newPassSolicitation(Request $request){
+        $this->validate($request,['email'=> 'required']);
+        $email = $request->input('email');
+        $result = DB::select("SELECT a.id from users as a inner join user_authorization as b on a.id=b.user_id where b.authorization_id = 1 and a.email=?",[$email]);
+        if ($result) {
+            $user_id = $result[0]->id;
+            
+            do {
+                $token = mail::createHash();
+                $check = DB::table('newpass')->where(['token'=>$token])->first();
+            } while ($check);
+
+            DB::table('newpass')->where(['user_id'=>$user_id])->delete();
+            DB::table('newpass')->insert(['user_id'=>$user_id,'token'=>$token]);
+            return json_encode(['sucess'=>"um email foi enviado para $email"]);
+        }else {
+            return json_encode(['failed'=> 'usuario nao cadastrado ou nao ativado']);
+        }
+    }
+
     function newUserActivate($token){
         
         $result = DB::table('first_access')->where(['token'=>$token])->first();
