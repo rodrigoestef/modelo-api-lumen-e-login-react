@@ -8,18 +8,29 @@ import conexao from '../conexao'
 export default ()=>{
     const {isAuth,setAuth} = useUser()
     const {checked,setChecked} = useUser()
+    const {setId,setName,setEmail,setAuthorizations} = useUser()
     
 
     useEffect(()=>{const isAuth = async()=>{
+        const con = conexao()
         try {
-            const con = conexao()
             const {data} = await con.get('/user')
-            console.log(data)
+            
+            if (data.id) {
+                setId(data.id)
+                setName(data.name)
+                setEmail(data.email)
+                setAuthorizations(data.authorizations)
+                localStorage.setItem('token',data.token)
+                setAuth(1)
+            }
+
             
         } catch (error) {
-            
+            console.log(error)
         
         }
+        
         setChecked(1)
     }
     isAuth()

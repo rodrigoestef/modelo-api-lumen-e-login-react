@@ -7,7 +7,7 @@ const config = ()=>{
     if (!token) {
         return axios.create({baseURL:'http://localhost/teste/public'});
     }else{
-        return axios.create({baseURL:'http://localhost/teste/public',headers:[`Authorization: Bearer ${token}`]});
+        return axios.create({baseURL:'http://localhost/teste/public',headers:{'Authorization': `Bearer ${token}`}});
     }
 }
 
