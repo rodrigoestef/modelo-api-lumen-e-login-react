@@ -24,6 +24,7 @@ class User extends Controller
 
             DB::table('newpass')->where(['user_id'=>$user_id])->delete();
             DB::table('newpass')->insert(['user_id'=>$user_id,'token'=>$token]);
+            mail::send($email,'nova senha',"Seu código para mudança de senha é: $token clique <a href=".getenv('APP_URL_DASHBOARD')."/novasenha>aqui</a>");
             return json_encode(['sucess'=>"um email foi enviado para $email"]);
         }else {
             return json_encode(['failed'=> 'usuario nao cadastrado ou nao ativado']);
