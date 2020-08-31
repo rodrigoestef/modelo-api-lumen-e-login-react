@@ -1,4 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Router from "./router";
+import 'bootstrap'
 
-ReactDOM.render(<div>aaaa</div>,document.querySelector('#App'))
+ReactDOM.render(<Router/>,document.querySelector('#App'))
