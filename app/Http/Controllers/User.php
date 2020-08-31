@@ -10,6 +10,19 @@ use App\pessoal\mail;
 class User extends Controller
 {
 
+    function newPass(Request $request){
+        $this->validate($request,['token'=>'required','password'=>'required']);
+
+        $newPassLine = DB::table('newpass')->where(['token'=>$request->input('token')])->first();
+        if (!$newPassLine) {
+            return json_encode(['failed'=>'token invalido']);
+        }
+        $user_id = $newPassLine->user_id;
+        DB::table('users')->where(['id'=>$user_id])->update(['password'=>Hash::make($request->input('password'))]);
+        DB::table('newpass')->where(['user_id'=>$user_id])->delete();
+        return json_encode(['sucess'=>'senha alterada com sucesso']);
+    }
+
     function newPassSolicitation(Request $request){
         $this->validate($request,['email'=> 'required']);
         $email = $request->input('email');
