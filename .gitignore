@@ -6,3 +6,4 @@ Homestead.yaml
 node_modules
 .phpunit.result.cache
 bundle.js
+config.json
