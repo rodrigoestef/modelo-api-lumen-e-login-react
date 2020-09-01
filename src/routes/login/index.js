@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+import Modal from './components/modal';
 import conexao from '../../conexao';
 import qs from 'querystring';
 import {useUser} from '../../context/userContext'
-import { useHistory } from 'react-router-dom';
+import { useHistory ,Link } from 'react-router-dom';
 export default () =>{
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
@@ -32,6 +33,8 @@ export default () =>{
 
 
     return(
+        <>
+        <Modal/>
         <div class='container'>
             <div class='p-5'></div>
             <div class='col-md-4 m-auto bg-white shadow-lg p-3 text-center rounded'>
@@ -46,9 +49,15 @@ export default () =>{
                     <button class='btn btn-info col' onClick={()=>{login()}}>entrar</button>
                 </div>
                 <div class='form-group'>
-                    <button class='btn btn-danger col'>esqueci a senha</button>
+                    <button class='btn btn-danger col' data-toggle="modal" data-target="#exampleModal">esqueci a senha</button>
+                </div>
+                <div class='col text-right'>
+                    <small>
+                        <Link to='/novoUsuario'>crie uma conta</Link>
+                    </small>
                 </div>
             </div>
         </div>
+        </>
     )
 }
