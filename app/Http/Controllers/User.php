@@ -67,7 +67,7 @@ class User extends Controller
 
         $result = DB::select('select * from users where email=?',[$email]);
         if ($result) {
-            return json_encode(['falied'=> 'email ja cadastrado']);
+            return json_encode(['failed'=> 'email ja cadastrado']);
         }
 
         $user_id = DB::table('users')->insertGetId(['name'=>$name,'email'=>$email,'password'=>Hash::make($password)]);
