@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Unauth from './unauthorizated'
 import Auth from './authorizated'
 import {useUser} from '../context/userContext';
-import Style from '../globalStyle';
+import Style,{Loading} from '../globalStyle';
 import conexao from '../conexao'
 
 export default ()=>{
@@ -38,8 +38,9 @@ export default ()=>{
     return(
         <>
             <Style/>
-            {isAuth == 0 && checked == 1 ? <Unauth/>:<div/>}
-            {isAuth == 1 && checked == 1 ? <Auth/>:<div/>}
+            {!checked && <Loading><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></Loading>}
+            {isAuth == 0 && checked == 1 && <Unauth/>}
+            {isAuth == 1 && checked == 1 && <Auth/>}
         </>
     )
 }
