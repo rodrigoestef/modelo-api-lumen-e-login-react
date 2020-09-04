@@ -8,12 +8,14 @@ export default ()=>{
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [password2,setPassword2] = useState('')
+    const [loading,setLoading] = useState(0)
     const history = useHistory()
 
     const  cadastrar = async() =>{
         if (name == '' || email == '' || password == '') {
             return
         }
+        setLoading(1)
         if (password2 != password) {
             alert('senhas não correspondentes')
             return
@@ -28,6 +30,7 @@ export default ()=>{
             alert(data.sucess)
             history.push('/')
         }
+        setLoading(0)
     }
 
     return(
@@ -47,7 +50,11 @@ export default ()=>{
                     <input class='form-control' type='password' value={password2} onChange={e=>setPassword2(e.target.value)} placeholder='confirmar senha'/>
                 </div>
                 <div class='form-group'>
-                    <button class='btn btn-info col' onClick={()=>{cadastrar()}}>cadastar</button>
+                    <button class='btn btn-info col' onClick={()=>{cadastrar()}}>
+                        { loading ? <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div> : 'entrar'}
+                    </button>
                 </div>
                 <div class='form-group'>
                 </div>

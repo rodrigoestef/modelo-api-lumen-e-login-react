@@ -4,10 +4,12 @@ import conexao from '../../../conexao'
 
 export default () =>{
     const [email,setEmail] = useState('')
+    const [loading,setLoading] = useState(0)
     const novaSenha = async() =>{
         if (email == '') {
             return
         }
+        setLoading(1)
         const con = conexao()
         const {data}= await con.post('/user/newpass',qs.stringify({email}))
         if (data.failed) {
@@ -17,6 +19,7 @@ export default () =>{
             setEmail('')
             alert(data.sucess)
         }
+        setLoading(0)
     }
 
     return (
@@ -35,7 +38,11 @@ export default () =>{
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="col btn btn-primary" onClick={()=>novaSenha()}>nova senha</button>
+                    <button type="button"  class="col btn btn-primary" onClick={()=>novaSenha()}>
+                        { loading ? <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div> : 'entrar'}
+                    </button>
                     
                 </div>
                 </div>

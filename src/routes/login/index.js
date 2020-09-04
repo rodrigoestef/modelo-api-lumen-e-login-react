@@ -8,12 +8,14 @@ export default () =>{
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [failed, setFailed] = useState('')
+    const [loading,setLoading] = useState(0)
     const history = useHistory()
     const {setId,setName,setAuthorizations,setAuth} = useUser()
     const login = async()=>{
         if (email == '' || password == '') {
             return
         }
+        setLoading(1)
         const con = conexao()
         const {data} = await con.post('/user/login',qs.stringify({email,password}))
         if (data.failed) {
@@ -28,6 +30,7 @@ export default () =>{
             setAuth(1)
             history.push('/')
         }
+        setLoading(0)
 
     }
 
@@ -46,7 +49,11 @@ export default () =>{
                     <input class='form-control' placeholder='senha' onChange={e=> setPassword(e.target.value)} value={password} type='password'/>
                 </div>
                 <div class='form-group'>
-                    <button class='btn btn-info col' onClick={()=>{login()}}>entrar</button>
+                    <button class='btn btn-info col' onClick={()=>{login()}}>
+                        { loading ? <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div> : 'entrar'}
+                    </button>
                 </div>
                 <div class='form-group'>
                     <button class='btn btn-danger col' data-toggle="modal" data-target="#exampleModal">esqueci a senha</button>
